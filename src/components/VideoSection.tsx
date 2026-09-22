@@ -1,17 +1,15 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Play, X, Film, Volume2, Info, Maximize, AlertCircle } from 'lucide-react';
+import { Play, X, Film, Volume2, AlertCircle } from 'lucide-react';
 import { SISTER_INFO } from '../data/content';
 
 interface VideoSectionProps {
   onOpenAssetGuide?: () => void;
 }
 
-export const VideoSection: React.FC<VideoSectionProps> = ({ onOpenAssetGuide }) => {
+export const VideoSection: React.FC<VideoSectionProps> = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [videoError, setVideoError] = useState(false);
-  const [videoLoading, setVideoLoading] = useState(true);
-  const videoRef = useRef<HTMLVideoElement | null>(null);
+  const [videoLoading, setVideoLoading] = useState(false);
 
   // Close on ESC key
   useEffect(() => {
@@ -32,29 +30,20 @@ export const VideoSection: React.FC<VideoSectionProps> = ({ onOpenAssetGuide }) 
 
   const openModal = () => {
     setIsModalOpen(true);
-    setVideoError(false);
-    setVideoLoading(true);
+    setVideoLoading(false);
   };
 
   const closeModal = () => {
-    if (videoRef.current) {
-      videoRef.current.pause();
-    }
     setIsModalOpen(false);
   };
 
-  const handleVideoCanPlay = () => {
-    setVideoLoading(false);
-    if (videoRef.current) {
-      videoRef.current.play().catch(() => {
-        // Autoplay may need user gesture or muted in some browser settings
-      });
+  // Extract Google Drive ID from the video source URL
+  const getGoogleDriveEmbedUrl = (url: string) => {
+    const fileIdMatch = url.match(/\/d\/([a-zA-Z0-9-_]+)/);
+    if (fileIdMatch) {
+      return `https://drive.google.com/file/d/${fileIdMatch[1]}/preview`;
     }
-  };
-
-  const handleVideoError = () => {
-    setVideoLoading(false);
-    setVideoError(true);
+    return url;
   };
 
   return (
@@ -176,62 +165,23 @@ export const VideoSection: React.FC<VideoSectionProps> = ({ onOpenAssetGuide }) 
 
               {/* Video Player Area */}
               <div className="relative aspect-video w-full bg-black flex items-center justify-center overflow-hidden">
-                {videoLoading && !videoError && (
+                {videoLoading && (
                   <div className="absolute inset-0 flex flex-col items-center justify-center text-purple-200 z-10 bg-black/50 backdrop-blur-sm">
                     <div className="w-10 h-10 border-2 border-pink-500 border-t-transparent rounded-full animate-spin mb-3" />
                     <span className="text-sm">Loading your birthday video...</span>
                   </div>
                 )}
 
-                {/* HTML5 Video Element */}
-                <video
-                  ref={videoRef}
-                  id="birthday-html5-video"
-                  src={SISTER_INFO.videoSrc}
-                  controls
-                  playsInline
-                  onCanPlay={handleVideoCanPlay}
-                  onError={handleVideoError}
-                  className="w-full h-full object-contain"
-                >
-                  Your browser does not support the video tag.
-                </video>
-
-                {/* Graceful helper if video fails to load */}
-                {videoError && (
-                  <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center bg-[#120D22]/95 z-20">
-                    <div className="w-14 h-14 rounded-full bg-pink-500/10 border border-pink-500/30 flex items-center justify-center text-pink-400 mb-4">
-                      <AlertCircle className="w-8 h-8" />
-                    </div>
-                    <h3 className="text-lg sm:text-xl font-bold text-white mb-2">
-                      Unable to Load Video
-                    </h3>
-                    <p className="text-sm text-purple-200/80 max-w-md mb-4 leading-relaxed">
-                      The video couldn't be loaded. Please check your internet connection and try again.
-                    </p>
-                    <div className="flex flex-wrap items-center justify-center gap-3">
-                      <button
-                        onClick={() => {
-                          // Try reloading video
-                          setVideoError(false);
-                          setVideoLoading(true);
-                          if (videoRef.current) {
-                            videoRef.current.load();
-                          }
-                        }}
-                        className="px-4 py-2 rounded-xl bg-pink-600 hover:bg-pink-500 text-white text-xs sm:text-sm font-medium transition-colors cursor-pointer"
-                      >
-                        Retry Loading Video
-                      </button>
-                      <button
-                        onClick={closeModal}
-                        className="px-4 py-2 rounded-xl bg-white/10 hover:bg-white/15 text-purple-200 text-xs sm:text-sm font-medium transition-colors cursor-pointer"
-                      >
-                        Close For Now
-                      </button>
-                    </div>
-                  </div>
-                )}
+                {/* Google Drive Embed iframe */}
+                <iframe
+                  src={getGoogleDriveEmbedUrl(SISTER_INFO.videoSrc)}
+                  width="100%"
+                  height="100%"
+                  allow="autoplay"
+                  title="Birthday Video"
+                  className="w-full h-full"
+                  onLoad={() => setVideoLoading(false)}
+                />
               </div>
 
               {/* Video Footer Caption */}
