@@ -17,7 +17,7 @@ export const SISTER_INFO = {
     "Not connected by blood, but connected by something much stronger — a bond I will always cherish.",
   videoTitle: "A Little Memory For You 🎥",
   videoSubtitle: "Some moments are better remembered than explained.",
-  videoSrc: "/lv_0_20260922213018.mp4",
+  videoSrc: "https://drive.google.com/uc?export=download&id=1DHJJOGABo3TMpPn6d5D8cH4b8A_8eBwU",
   musicSrc: "/birthday-music.mp3",
 };
 
