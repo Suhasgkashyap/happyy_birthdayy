@@ -125,23 +125,7 @@ export const VideoSection: React.FC<VideoSectionProps> = ({ onOpenAssetGuide }) 
           </div>
         </div>
 
-        {/* Clear Instructions helper box */}
-        <div className="mt-6 max-w-xl mx-auto text-center">
-          <p className="text-xs text-purple-300/60 flex items-center justify-center gap-1.5">
-            <Info className="w-3.5 h-3.5 text-pink-400 shrink-0" />
-            <span>
-              Video file path: <code className="text-pink-300 bg-white/5 px-1.5 py-0.5 rounded">public/birthday-video.mp4</code>
-            </span>
-            {onOpenAssetGuide && (
-              <button
-                onClick={onOpenAssetGuide}
-                className="underline hover:text-pink-300 transition-colors cursor-pointer ml-1"
-              >
-                View Asset Guide
-              </button>
-            )}
-          </p>
-        </div>
+
       </div>
 
       {/* Cinematic Modal / Lightbox for HTML5 Video */}
@@ -213,18 +197,17 @@ export const VideoSection: React.FC<VideoSectionProps> = ({ onOpenAssetGuide }) 
                   Your browser does not support the video tag.
                 </video>
 
-                {/* Graceful helper if birthday-video.mp4 is not yet placed in public/ */}
+                {/* Graceful helper if video fails to load */}
                 {videoError && (
                   <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center bg-[#120D22]/95 z-20">
                     <div className="w-14 h-14 rounded-full bg-pink-500/10 border border-pink-500/30 flex items-center justify-center text-pink-400 mb-4">
                       <AlertCircle className="w-8 h-8" />
                     </div>
                     <h3 className="text-lg sm:text-xl font-bold text-white mb-2">
-                      Ready For Your Birthday Video
+                      Unable to Load Video
                     </h3>
                     <p className="text-sm text-purple-200/80 max-w-md mb-4 leading-relaxed">
-                      We couldn't find <code className="text-pink-300 font-mono bg-white/10 px-1.5 py-0.5 rounded">public/birthday-video.mp4</code> yet.
-                      Drop your MP4 video into the <code className="text-amber-300 font-mono bg-white/10 px-1.5 py-0.5 rounded">public/</code> folder, and it will play here seamlessly!
+                      The video couldn't be loaded. Please check your internet connection and try again.
                     </p>
                     <div className="flex flex-wrap items-center justify-center gap-3">
                       <button
