@@ -1,0 +1,6 @@
+{
+  "name": "To My Sister, Not By Blood",
+  "description": "A heartfelt, emotional, and interactive birthday celebration website for an unblooded sister.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
